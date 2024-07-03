@@ -1,0 +1,20 @@
+#!/bin/sh
+
+SERVICE="PACKAGE_NAME"
+
+if [ "$EUID" -ne 0 ]; then
+    echo "This script must be run as root"
+    exit 1
+fi
+
+dir=`dirname $0`
+
+synopkg start $SERVICE > /dev/null
+
+if [ "$?" -eq 0 ]; then
+    echo "$SERVICE has been successfully started"
+    exit 0
+else
+    echo "An error occurred during $SERVICE startup" 1>&2
+    exit 1
+fi

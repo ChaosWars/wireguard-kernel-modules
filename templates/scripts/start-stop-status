@@ -1,0 +1,37 @@
+#!/bin/sh
+# scripts/start-stop-status
+
+MODULES=("KERNEL_MODULES")
+SERVICE="PACKAGE_NAME"
+
+case $1 in
+    start)
+        for module in "${MODULES[@]}"; do
+            echo "Inserting module $module"
+
+            synomoduletool --insmod $SERVICE ${module}.ko
+            echo "Result of synomoduletool --insmod $SERVICE ${module}.ko:  $?"
+
+            insmod $module $SYNOPKG_PKGDEST/${module}.ko
+            echo "Result of insmod $module $SYNOPKG_PKGDEST/${module}.ko: $?"
+        done
+
+        exit 0
+    ;;
+    stop)
+        for module in "${MODULES[@]}"; do
+            echo "Removing module $module"
+
+            synomoduletool --rmmod $SERVICE ${module}.ko
+            echo "Result of synomoduletool --rmmod $SERVICE ${module}.ko: $?"
+
+            rmmod -f ${module}.ko
+            echo "Result of rmmod -f $module: $?"
+        done
+
+        exit 0
+    ;;
+    status)
+        exit 0
+    ;;
+esac

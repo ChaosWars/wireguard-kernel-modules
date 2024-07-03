@@ -1,0 +1,10 @@
+#!/bin/bash
+# SynoBuildConf/build
+
+case ${MakeClean} in
+       [Yy][Ee][Ss])
+               make clean
+               ;;
+esac
+
+make ${MAKE_FLAGS} ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE KSRC=$KSRC

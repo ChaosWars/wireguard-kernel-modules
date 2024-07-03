@@ -1,0 +1,14 @@
+---
+services:
+  wireguard-kernel-modules:
+    command: sleep infinity
+    container_name: wireguard-kernel-modules
+    environment:
+      - KERNEL_VERSION=${KERNEL_VERSION}
+      - PACKAGE_NAME=${PACKAGE_NAME}
+      - PACKAGE_VERSION=${PACKAGE_VERSION}
+      - WORKSPACE=${WORKSPACE}
+    image: "mcr.microsoft.com/devcontainers/base:1-${VARIANT}"
+    init: true
+    volumes:
+      - ..:${WORKSPACE}:cached
