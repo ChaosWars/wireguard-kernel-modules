@@ -4,6 +4,7 @@ services:
     command: sleep infinity
     container_name: wireguard-kernel-modules
     environment:
+      - KERNEL_DSM_VERSION=${KERNEL_DSM_VERSION}
       - KERNEL_VERSION=${KERNEL_VERSION}
       - PACKAGE_NAME=${PACKAGE_NAME}
       - PACKAGE_VERSION=${PACKAGE_VERSION}

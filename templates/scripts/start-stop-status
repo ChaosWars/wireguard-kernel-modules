@@ -1,34 +1,48 @@
 #!/bin/sh
 # scripts/start-stop-status
 
+IPTABLES_MODULE_LIST="/usr/syno/etc/iptables_modules_list"
 MODULES=("KERNEL_MODULES")
 SERVICE="PACKAGE_NAME"
+SYNOMODULETOOL="/usr/syno/bin/synomoduletool"
 
 case $1 in
     start)
-        for module in "${MODULES[@]}"; do
-            echo "Inserting module $module"
+        # source "$IPTABLES_MODULE_LIST"
 
-            synomoduletool --insmod $SERVICE ${module}.ko
-            echo "Result of synomoduletool --insmod $SERVICE ${module}.ko:  $?"
+        # if [ -x "$SYNOMODULETOOL" -a -f "$IPTABLES_MODULE_LIST" ]; then
+        #     sysctl -w net.ipv4.ip_forward=1
+        #     "$SYNOMODULETOOL" --insmod "$SERVICE" $KERNEL_MODULES_CORE
+        #     echo "Loaded $? iptables core modules"
 
-            insmod $module $SYNOPKG_PKGDEST/${module}.ko
-            echo "Result of insmod $module $SYNOPKG_PKGDEST/${module}.ko: $?"
-        done
+        #     "$SYNOMODULETOOL" --insmod "$SERVICE" $KERNEL_MODULES_NAT
+        #     echo "Loaded $? iptables NAT modules"
+        # fi
 
+        # for module in "${MODULES[@]}"; do
+        #     echo "Inserting module $module"
+        #     insmod $module $SYNOPKG_PKGDEST/wireguardkernelmodules/${module}.ko
+        #     echo "Result of insmod $module $SYNOPKG_PKGDEST/wireguardkernelmodules/${module}.ko: $?"
+        # done
+
+        echo "Hello World" > $SYNOPKG_TEMP_LOGFILE
         exit 0
     ;;
     stop)
-        for module in "${MODULES[@]}"; do
-            echo "Removing module $module"
+        # source "$IPTABLES_MODULE_LIST"
 
-            synomoduletool --rmmod $SERVICE ${module}.ko
-            echo "Result of synomoduletool --rmmod $SERVICE ${module}.ko: $?"
+        # for module in "${MODULES[@]}"; do
+        #     echo "Removing module $module"
+        #     rmmod -f $SYNOPKG_PKGDEST/wireguardkernelmodules/${module}.ko
+        #     echo "Result of rmmod -f $module: $?"
+        # done
 
-            rmmod -f ${module}.ko
-            echo "Result of rmmod -f $module: $?"
-        done
+        # if [ -x "$SYNOMODULETOOL" -a -f "$IPTABLES_MODULE_LIST" ]; then
+        #     "$SYNOMODULETOOL" --rmmod "$SERVICE" $KERNEL_MODULES_NAT
+        #     "$SYNOMODULETOOL" --rmmod "$SERVICE" $KERNEL_MODULES_CORE
+        # fi
 
+        echo "Goodbye World" > $SYNOPKG_TEMP_LOGFILE
         exit 0
     ;;
     status)

@@ -2,9 +2,15 @@
 # SynoBuildConf/build
 
 case ${MakeClean} in
-       [Yy][Ee][Ss])
-               make clean
-               ;;
+    [Yy][Ee][Ss])
+        make distclean
+    ;;
 esac
 
-make ${MAKE_FLAGS} ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE KSRC=$KSRC
+case ${CleanOnly} in
+    [Yy][Ee][Ss])
+        make clean
+    ;;
+esac
+
+make ${MAKE_FLAGS}

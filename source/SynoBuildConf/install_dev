@@ -11,7 +11,6 @@ create_package_tgz() {
 	local package_tgz_dir=/tmp/_${PACKAGE_NAME}_package_tgz
 	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
 	make install DESTDIR="$package_tgz_dir"
-	
 	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 

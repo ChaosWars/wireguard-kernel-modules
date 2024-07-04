@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ -z $KERNEL_DSM_VERSION ]]; then
+    echo "KERNEL_DSM_VERSION is not set"
+    exit 1
+fi
+
 if [[ -z $KERNEL_VERSION ]]; then
     echo "KERNEL_VERSION is not set"
     exit 1
@@ -16,11 +21,11 @@ if [[ -z $TOOLKITPATH ]]; then
 fi
 
 if [[ ! -f ${TOOLKIT_SOURCE_DIR}/iptable_raw.c && ! -f ${TOOLKIT_SOURCE_DIR}/xt_comment.c && ! -f ${TOOLKIT_SOURCE_DIR}/xt_connmark.c ]]; then
-    KERNEL_TAR_FILE="${TOOLKITPATH}/${KERNEL_VERSION}.tar.xz"
-    KERNEL_URI="https://cdn.kernel.org/pub/linux/kernel/v4.x/${KERNEL_TAR_FILE}"
+    KERNEL_TAR_FILE="${TOOLKITPATH}/${KERNEL_VERSION}.txz"
+    KERNEL_URI="https://global.synologydownload.com/download/ToolChain/Synology%20NAS%20GPL%20Source/${KERNEL_DSM_VERSION}/${ARCHITECTURE}/${KERNEL_VERSION}.txz"
 
     if [[ ! -f "$KERNEL_TAR_FILE" ]]; then
-        echo "Downloading $KERNEL_TAR_FILE"
+        echo "Downloading $KERNEL_URI"
         wget -q -O $KERNEL_TAR_FILE $KERNEL_URI
     fi
 

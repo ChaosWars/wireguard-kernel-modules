@@ -52,30 +52,31 @@ if [[ -d "$BUILD_ENV_SOURCE" ]]; then
     mkdir -p "$BUILD_ENV_SOURCE"
 fi
 
-SOURCE_SCRIPT_DIR="$SOURCE_DIR/scripts"
+SCRIPTS_DIR="$TOOLKIT_SOURCE_DIR/scripts"
 
-if [[ -d "$SOURCE_SCRIPT_DIR" ]]; then
-    echo "Removing $SOURCE_SCRIPT_DIR"
-    rm -rf "$SOURCE_SCRIPT_DIR"
+if [[ -d "$SCRIPTS_DIR" ]]; then
+    echo "Removing $SCRIPTS_DIR"
+    rm -rf "$SCRIPTS_DIR"
 fi
 
-echo "Creating $SOURCE_SCRIPT_DIR"
-mkdir -p "$SOURCE_SCRIPT_DIR"
+echo "Creating $SCRIPTS_DIR"
+mkdir -p "$SCRIPTS_DIR"
 
 KERNEL_MODULES="iptable_raw xt_comment xt_connmark"
 
 echo "Initializing service templates"
-sed -e "s/KERNEL_MODULES/$KERNEL_MODULES/g" -e "s/PACKAGE_NAME/$PACKAGE_NAME/g" ${TEMPLATES_DIR}/scripts/start-stop-status > $SOURCE_SCRIPT_DIR/start-stop-status
-sed -e "s/PACKAGE_NAME/$PACKAGE_NAME/g" ${TEMPLATES_DIR}/scripts/start > $SOURCE_SCRIPT_DIR/start
+sed -e "s/KERNEL_MODULES/$KERNEL_MODULES/g" -e "s/PACKAGE_NAME/$PACKAGE_NAME/g" ${TEMPLATES_DIR}/scripts/start-stop-status > $SCRIPTS_DIR/start-stop-status
 
 cd $SOURCE_DIR
 
 echo "Copying source files to $TOOLKIT_SOURCE_DIR"
 cp -R conf $TOOLKIT_SOURCE_DIR
-cp -R scripts $TOOLKIT_SOURCE_DIR
 cp -R SynoBuildConf $TOOLKIT_SOURCE_DIR
+cp ${TEMPLATES_DIR}/scripts/{postinst,postuninst,postupgrade,preinst,preuninst,preupgrade} $SCRIPTS_DIR
 cp INFO.sh $TOOLKIT_SOURCE_DIR
 cp Makefile $TOOLKIT_SOURCE_DIR
+cp PACKAGE_ICON*.PNG $TOOLKIT_SOURCE_DIR
+cp LICENSE $TOOLKIT_SOURCE_DIR
 
 cd $TOOLKITPATH
 ${SOURCE_DIR}/getKernelSource.sh
@@ -90,6 +91,7 @@ $PKGSCRIPTSDIR/PkgCreate.py \
     -v $DSMVERSION \
     --build-opt=-J \
     --print-log \
+    --min-sdk $DSMVERSION \
     -c "${PACKAGE_NAME}"
 
 # Save package builder exit code. This allows us to print the logfiles and give
@@ -98,23 +100,6 @@ pkg_status=$?
 
 set -e
 umount $BUILD_ENV_DEV
-
-BUILD_LOG="$BUILD_ENV/logs.build"
-INSTALL_LOG="$BUILD_ENV/logs.install"
-
-if [[ -f $BUILD_LOG ]]; then
-    echo "Build log"
-    echo "========="
-    cat $BUILD_LOG
-    echo
-fi
-
-if [[ -f $INSTALL_LOG ]]; then
-    echo "Install log"
-    echo "==========="
-    cat $INSTALL_LOG
-    echo
-fi
 
 TARGET_DIR="$WORKSPACE/target"
 
