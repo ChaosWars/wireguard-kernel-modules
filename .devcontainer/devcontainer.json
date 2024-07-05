@@ -17,9 +17,7 @@
 		"docker-compose.yml"
 	],
 	"features": {
-		"ghcr.io/chaoswars/synology-features/toolkit": {
-			"dsmVersion": "7.0"
-		},
+		"ghcr.io/chaoswars/synology-features/toolkit": {},
 		"ghcr.io/devcontainers-contrib/features/apt-packages:1": {
 			"packages": "kmod"
 		},
@@ -28,7 +26,6 @@
 		"ghcr.io/stuartleeks/dev-container-features/shell-history": {}
 	},
 	"overrideCommand": true,
-	"remoteUser": "root",
 	"service": "wireguard-kernel-modules",
 	"workspaceFolder": "/workspace/wireguard-kernel-modules"
 }

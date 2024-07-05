@@ -2,6 +2,13 @@
 
 set -eu
 
+IS_ROOT=$(id -u)
+
+if [[ $IS_ROOT -ne 0 ]]; then
+    echo "Script must be run as root"
+    exit 1
+fi
+
 if [[ -z $DSMVERSION ]]; then
     echo "DSMVERSION is not set"
     exit 1
@@ -66,17 +73,18 @@ KERNEL_MODULES="iptable_raw xt_comment xt_connmark"
 
 echo "Initializing service templates"
 sed -e "s/KERNEL_MODULES/$KERNEL_MODULES/g" -e "s/PACKAGE_NAME/$PACKAGE_NAME/g" ${TEMPLATES_DIR}/scripts/start-stop-status > $SCRIPTS_DIR/start-stop-status
+chmod +x $SCRIPTS_DIR/start-stop-status
 
 cd $SOURCE_DIR
 
 echo "Copying source files to $TOOLKIT_SOURCE_DIR"
-cp -R conf $TOOLKIT_SOURCE_DIR
-cp -R SynoBuildConf $TOOLKIT_SOURCE_DIR
-cp ${TEMPLATES_DIR}/scripts/{postinst,postuninst,postupgrade,preinst,preuninst,preupgrade} $SCRIPTS_DIR
-cp INFO.sh $TOOLKIT_SOURCE_DIR
-cp Makefile $TOOLKIT_SOURCE_DIR
-cp PACKAGE_ICON*.PNG $TOOLKIT_SOURCE_DIR
-cp LICENSE $TOOLKIT_SOURCE_DIR
+cp -av conf $TOOLKIT_SOURCE_DIR
+cp -av SynoBuildConf $TOOLKIT_SOURCE_DIR
+cp -av ${TEMPLATES_DIR}/scripts/{postinst,postuninst,postupgrade,preinst,preuninst,preupgrade} $SCRIPTS_DIR
+cp -av INFO.sh $TOOLKIT_SOURCE_DIR
+cp -av Makefile $TOOLKIT_SOURCE_DIR
+cp -av PACKAGE_ICON*.PNG $TOOLKIT_SOURCE_DIR
+cp -av LICENSE $TOOLKIT_SOURCE_DIR
 
 cd $TOOLKITPATH
 ${SOURCE_DIR}/getKernelSource.sh
@@ -90,7 +98,6 @@ $PKGSCRIPTSDIR/PkgCreate.py \
     -p $ARCHITECTURE \
     -v $DSMVERSION \
     --build-opt=-J \
-    --print-log \
     --min-sdk $DSMVERSION \
     -c "${PACKAGE_NAME}"
 
@@ -101,6 +108,11 @@ pkg_status=$?
 set -e
 umount $BUILD_ENV_DEV
 
+if [[ $pkg_status -ne 0 ]]; then
+    echo "Failed to build package"
+    exit 1
+fi
+
 TARGET_DIR="$WORKSPACE/target"
 
 if [[ -d $TARGET_DIR ]]; then
@@ -110,15 +122,17 @@ fi
 
 echo "Creating $TARGET_DIR"
 mkdir -p $TARGET_DIR
+chown -R $SUDO_UID:$SUDO_GID $TARGET_DIR
 
 PACKAGES_DIR="$BUILD_ENV/image/packages"
 
 if [[ -d $PACKAGES_DIR ]]; then
     echo "Copying packages to $TARGET_DIR"
-    cp $PACKAGES_DIR/*.spk $TARGET_DIR
+    cp -av $PACKAGES_DIR/*.spk $TARGET_DIR
 else
     echo "PACKAGES_DIR not found: $PACKAGES_DIR"
     exit 1
 fi
 
+chown $SUDO_UID:$SUDO_GID $TARGET_DIR/*.spk
 exit $pkg_status

@@ -16,7 +16,6 @@ clean:
 	make -C $(KSRC) M=$(PWD) clean
 
 distclean: clean
-	rm -f $(DESTDIR)/wireguardkernelmodules
 
 install: all
 	mkdir -p $(DESTDIR)/wireguardkernelmodules

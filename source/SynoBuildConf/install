@@ -1,17 +1,24 @@
 #!/bin/bash
 ### Use PKG_DIR as working directory.
 PKG_DIR=/tmp/_${PACKAGE_NAME}
+echo "Removing $PKG_DIR"
 rm -rf $PKG_DIR
+echo "Creating $PKG_DIR"
 mkdir -p $PKG_DIR
+chown -R $SUDO_UID:$SUDO_GID $PKG_DIR
 
 ### get spk packing functions
 source /${PKGSCRIPTSDIR}/include/pkg_util.sh
 
 create_package_tgz() {
 	local package_tgz_dir=/tmp/_${PACKAGE_NAME}_package_tgz
-	rm -rf $package_tgz_dir && mkdir -p $package_tgz_dir
+	echo "Removing $package_tgz_dir"
+	rm -rf $package_tgz_dir
+	echo "Creating $package_tgz_dir"
+	mkdir -p $package_tgz_dir
 	make install DESTDIR="$package_tgz_dir"
-	
+	chown -R $SUDO_UID:$SUDO_GID $package_tgz_dir
+
 	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
@@ -26,7 +33,9 @@ create_spk(){
 
 	### Generate INFO file
 	./INFO.sh > INFO
-	cp INFO $PKG_DIR/INFO
+	cp -av INFO $PKG_DIR/INFO
+
+	chown -R $SUDO_UID:$SUDO_GID $PKG_DIR
 
 	### Create the final spk.
 	# pkg_make_spk <source path> <dest path> <spk file name>
