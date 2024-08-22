@@ -10,7 +10,7 @@ services:
       - PACKAGE_VERSION=${PACKAGE_VERSION}
       - TAR_CMD="fakeroot tar"
       - WORKSPACE=${WORKSPACE}
-    image: ghcr.io/synocommunity/spksrc
+    image: synocommunity/spksrc
     init: true
     platform: linux/amd64
     privileged: true
