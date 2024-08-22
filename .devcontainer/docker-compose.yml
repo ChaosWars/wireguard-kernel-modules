@@ -8,8 +8,13 @@ services:
       - KERNEL_VERSION=${KERNEL_VERSION}
       - PACKAGE_NAME=${PACKAGE_NAME}
       - PACKAGE_VERSION=${PACKAGE_VERSION}
+      - TAR_CMD="fakeroot tar"
       - WORKSPACE=${WORKSPACE}
-    image: "mcr.microsoft.com/devcontainers/base:1-${VARIANT}"
+    image: ghcr.io/synocommunity/spksrc
     init: true
+    platform: linux/amd64
+    privileged: true
     volumes:
       - ..:${WORKSPACE}:cached
+      - ../spksrc:/spksrc:cached
+    working_dir: /spksrc

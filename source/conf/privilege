@@ -1,5 +1,21 @@
 {
     "defaults": {
         "run-as": "package"
-    }
+    },
+    "username": "WireguardKernelModules",
+    "groupname": "WireguardKernelModules",
+    "tool": [
+        {
+            "relpath": "usr/lib/modules/iptable_raw.ko",
+            "capability": "cap_sys_module"
+        },
+        {
+            "relpath": "usr/lib/modules/xt_comment.ko",
+            "capability": "cap_sys_module"
+        },
+        {
+            "relpath": "usr/lib/modules/xt_connmark.ko",
+            "capability": "cap_sys_module"
+        }
+    ]
 }

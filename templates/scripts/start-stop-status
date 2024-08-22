@@ -5,6 +5,7 @@ IPTABLES_MODULE_LIST="/usr/syno/etc/iptables_modules_list"
 MODULES=("KERNEL_MODULES")
 SERVICE="PACKAGE_NAME"
 SYNOMODULETOOL="/usr/syno/bin/synomoduletool"
+PACKAGE_MODULE_DIR="$SYNOPKG_PKGDEST/usr/lib/modules"
 
 case $1 in
     start)
@@ -21,8 +22,8 @@ case $1 in
 
         # for module in "${MODULES[@]}"; do
         #     echo "Inserting module $module"
-        #     insmod $module $SYNOPKG_PKGDEST/wireguardkernelmodules/${module}.ko
-        #     echo "Result of insmod $module $SYNOPKG_PKGDEST/wireguardkernelmodules/${module}.ko: $?"
+        #     insmod $module $PACKAGE_MODULE_DIR/${module}.ko
+        #     echo "Result of insmod $module $PACKAGE_MODULE_DIR/${module}.ko: $?"
         # done
 
         echo "Hello World" > $SYNOPKG_TEMP_LOGFILE
@@ -33,7 +34,7 @@ case $1 in
 
         # for module in "${MODULES[@]}"; do
         #     echo "Removing module $module"
-        #     rmmod -f $SYNOPKG_PKGDEST/wireguardkernelmodules/${module}.ko
+        #     rmmod -f $PACKAGE_MODULE_DIR/${module}.ko
         #     echo "Result of rmmod -f $module: $?"
         # done
 

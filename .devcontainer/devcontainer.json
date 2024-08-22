@@ -17,15 +17,17 @@
 		"docker-compose.yml"
 	],
 	"features": {
-		"ghcr.io/chaoswars/synology-features/toolkit": {},
-		"ghcr.io/devcontainers-contrib/features/apt-packages:1": {
-			"packages": "kmod"
+		"ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
+			"packages": "kmod,sudo"
 		},
+		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {},
 		"ghcr.io/devcontainers/features/docker-outside-of-docker": {},
-		"ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {},
 		"ghcr.io/stuartleeks/dev-container-features/shell-history": {}
 	},
+	"initializeCommand": ".devcontainer/init.sh",
 	"overrideCommand": true,
+	"postAttachCommand": "postAttach.sh",
+	"remoteUser": "root",
 	"service": "wireguard-kernel-modules",
 	"workspaceFolder": "/workspace/wireguard-kernel-modules"
 }

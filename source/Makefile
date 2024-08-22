@@ -18,5 +18,5 @@ clean:
 distclean: clean
 
 install: all
-	mkdir -p $(DESTDIR)/wireguardkernelmodules
-	install $(kernel_mod) $(DESTDIR)/wireguardkernelmodules
+	mkdir -p $(DESTDIR)
+	install $(kernel_mod) $(DESTDIR)

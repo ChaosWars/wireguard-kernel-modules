@@ -14,10 +14,14 @@ create_package_tgz() {
 	local package_tgz_dir=/tmp/_${PACKAGE_NAME}_package_tgz
 	echo "Removing $package_tgz_dir"
 	rm -rf $package_tgz_dir
-	echo "Creating $package_tgz_dir"
-	mkdir -p $package_tgz_dir
-	make install DESTDIR="$package_tgz_dir"
+
+	local package_destdir=$PKG_DIR/usr/lib/modules
+	echo "Creating $package_destdir"
+	mkdir -p $package_destdir
+
+	make install DESTDIR="$package_destdir"
 	chown -R $SUDO_UID:$SUDO_GID $package_tgz_dir
+	chmod 444 $package_destdir/*.ko
 
 	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
